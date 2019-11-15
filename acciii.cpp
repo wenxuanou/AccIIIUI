@@ -157,9 +157,53 @@ void AccIII::transmitData(){
 }
 
 int AccIII::printData(){
-    // Process USB data here, formatting
-
+    // Process and decode USB data
+	long int read_byte_num = dwSum;
+	long int byte_per_sensor = (read_byte_num / READNUM) -1;
+	long int samp_num = (byte_per_sensor / 6);
+	int start_i = READNUM+1; // Skip the beginning WHO_AM_I check values
+	//int end_i = start_i + (byte_per_sensor*READNUM) -1
+	
+	unsigned char* hex_data = new unsigned char[byte_per_sensor*READNUM];
+	strcpy(hex_data,(fileBuffer+start_i));
+	
+	long int hex_i = 0;
+	for (int i = 0; i < samp_num; ++i) // One sample contains 46 sensor data
+	{
+		std::vector<float> a_sensor(3*READNUM); // [Acc0_X,Acc0_Y,Acc0_Z,Acc1_X,...,Acc46_Z]
+		
+		// Odd number sensor (Pull up I2C)
+		for (int j = 0; j < 3; ++j) // Axis X, Y, Z
+		{
+			for (int k = 0; k < HALFREAD; ++k) // Odd number Sensor 1,2,...,23
+			{
+				a_sensor[6*k+j] = (((int)hex_data[hex_i+k+HALFREAD]&0xFF)<<8) | ((int)hex_data[hex_i+k]&0xFF); //[High,Low]
+				
+				if (a_sensor[6*k+j]> 32767) a_sensor[6*k+j] -= 65536; // # Format correction
+				
+				a_sensor[6*k+j] *= GSCALE; // Unit converted to g (gravity)
+			}
+			hex_i += READNUM;
+		}
+		
+		// Even number sensor (Pull down I2C)
+		for (int j = 0; j < 3; ++j) // Axis X, Y, Z
+		{
+			for (int k = 0; k < HALFREAD; ++k) // Even number Sensor 1,2,...,23
+			{
+				a_sensor[6*k+j+3] = (((int)hex_data[hex_i+k+HALFREAD]&0xFF)<<8) | ((int)hex_data[hex_i+k]&0xFF); //[High,Low]
+				
+				if (a_sensor[6*k+j+3]> 32767) a_sensor[6*k+j+3] -= 65536; // # Format correction
+				
+				a_sensor[6*k+j+3] *= GSCALE; // Unit converted to g (gravity)
+			}
+			hex_i += READNUM;
+		}
+		decoded_data.push_back(a_sensor); //  Append a complete sample
+	}
 
     // output USB data from buffer
     return 0;
 }
+// Three axes: [X_L,X_H,Y_L,Y_H,Z_L,Z_H]
+
