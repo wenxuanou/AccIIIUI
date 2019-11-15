@@ -2,6 +2,7 @@
 #include <QApplication>
 #include "DataProc.h"
 #include<iostream>
+#include<cstring>
 //#include<thread>
 
 class AccIII
@@ -23,7 +24,7 @@ private:
     int DataNum;
 	
 	//Decoding configuration parameters and variables 
-	GSCALE = 0.00073; // Unit coversion (0.73 mg/digit)
+    const float GSCALE = 0.00073; // Unit coversion (0.73 mg/digit)
 	unsigned int READNUM = 46;
 	unsigned int HALFREAD = 23;
 	
