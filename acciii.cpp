@@ -156,7 +156,12 @@ void AccIII::transmitData(){
     free(fileBuffer); // Free buffer memory to avoid memory leak
 }
 
-int AccIII::printData(){
+void stopTransmission(){
+
+}
+
+
+std::vector<std::vector<float>> AccIII::printData(){
     // Process and decode USB data
 	long int read_byte_num = dwSum;
 	long int byte_per_sensor = (read_byte_num / READNUM) -1;
@@ -170,7 +175,7 @@ int AccIII::printData(){
 	long int hex_i = 0;
 	for (int i = 0; i < samp_num; ++i) // One sample contains 46 sensor data
 	{
-        std::vector<float> a_sample(3*READNUM); // [Acc0_X,Acc0_Y,Acc0_Z,Acc1_X,...,Acc46_Z]
+        std::vector<float> a_sample(3*READNUM); // [Acc0_X,Acc0_Y,Acc0_Z,Acc1_X,...,Acc46_Z] 46*3 = 138
 		
 		// Odd number sensor (Pull up I2C)
 		for (int j = 0; j < 3; ++j) // Axis X, Y, Z
@@ -200,10 +205,17 @@ int AccIII::printData(){
 			hex_i += READNUM;
 		}
         decoded_data.push_back(a_sample); //  Append a complete sample
+
+        dataSetNum = decoded_data.size();
+        // decoded_data is a vector of size dataSetNum * 138
 	}
 
     // output USB data from buffer
-    return 0;
+    return decoded_data;
 }
 // Three axes: [X_L,X_H,Y_L,Y_H,Z_L,Z_H]
+
+int AccIII::printDataSetNum(){
+    return dataSetNum;
+}
 

@@ -3,6 +3,7 @@
 #include "DataProc.h"
 #include<iostream>
 #include<cstring>
+#include<vector>
 //#include<thread>
 
 class AccIII
@@ -12,7 +13,9 @@ public:
     ~AccIII();
 
     void transmitData();
-    int printData();
+    void stopTransmission();
+    std::vector<std::vector<float>> printData();
+    int printDataSetNum();
 
 private:
     DWORD EventDWord;
@@ -45,6 +48,9 @@ private:
     DWORD BytesReceivedTest;
     DWORD readBytesTest = 0;
     unsigned char RxBuffer[10000];
+
+    //Number of data set acquired
+    int dataSetNum;     // data buffer has size dataSetNum*138
 
     void setupUSB(int argc, char** argv);
 

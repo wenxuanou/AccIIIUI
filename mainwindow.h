@@ -16,7 +16,11 @@ public:
     ~MainWindow();
 
 private slots:
-    void realtimeDataSlot();    // slot to refresh plot
+    //void realtimeDataSlot();    // slot to refresh plot
+
+    void on_StartButton_clicked();      // Start sampling button clicked
+
+    void on_StopButton_clicked();       // Stop sampling button clicked
 
 private:
     Ui::MainWindow *ui;
@@ -24,10 +28,7 @@ private:
 
     // Plotting functions
     void setupPlot(QCustomPlot *customPlot);
-    void getData();
-
-    double data;    // USB Data
-
+    void plotData(QCustomPlot *customPlot);
 
 };
 

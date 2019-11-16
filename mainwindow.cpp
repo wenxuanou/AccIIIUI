@@ -12,8 +12,6 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent) :
     setupPlot(ui->customPlot);
     ui->customPlot->replot();
 
-    data = 0;
-
 }
 
 MainWindow::~MainWindow()
@@ -21,6 +19,20 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+// For static ploting
+void MainWindow::setupPlot(QCustomPlot *customPlot){
+    // create graph and assign data to it:
+    customPlot->addGraph();
+    // give the axes some labels:
+    customPlot->xAxis->setLabel("sample");
+    customPlot->yAxis->setLabel("values");
+    // set axes ranges, so we see all data:
+    customPlot->xAxis->setRange(-1, 1);
+    customPlot->yAxis->setRange(0, 1);
+}
+
+/*
+// For real time plotting
 void MainWindow::setupPlot(QCustomPlot *customPlot){
 
     QTimer *dataTimer = new QTimer(this);
@@ -45,7 +57,10 @@ void MainWindow::setupPlot(QCustomPlot *customPlot){
     dataTimer->start(0); // Interval 0 means to refresh as fast as possible
 
 }
+*/
 
+/*
+// For real time plotting only
 void MainWindow::realtimeDataSlot(){
 
     static QTime time(QTime::currentTime());
@@ -56,9 +71,9 @@ void MainWindow::realtimeDataSlot(){
     if (key-lastPointKey > 0.002) // at most add point every 2 ms
     {
         // obtain data from USB
-        getData();
+        //getData();
         // add data to lines:
-        ui->customPlot->graph(0)->addData(key, data);     // Get external data input
+        ui->customPlot->graph(0)->addData(key,___);     // Get external data input
 
         // rescale value (vertical) axis to fit the current data:
         ui->customPlot->graph(0)->rescaleValueAxis();
@@ -84,10 +99,38 @@ void MainWindow::realtimeDataSlot(){
         frameCount = 0;
     }
 }
+*/
 
+void MainWindow::plotData(QCustomPlot *customPlot){
 
-void MainWindow::getData(){
-    acciii.transmitData();
-    data = acciii.printData();
+    std::vector<std::vector<float>> data_buffer = acciii.printData();       // Get data from USB
+    int dataSetNum = acciii.printDataSetNum();
+    QVector<double> value(dataSetNum), sampleNum(dataSetNum); // initialize vector for plotting
+
+    // Plot for each sensor(138 total), plot dataSetNum number of data
+    for (int countSensor = 0; countSensor < 138; countSensor++){
+        for(int countDataNum = 0; countDataNum < dataSetNum; countDataNum++){
+            value.push_back(data_buffer[countDataNum][countSensor]);
+            sampleNum.push_back(countDataNum);
+        }
+        customPlot->graph(0)->addData(value, sampleNum);
+        value.erase(value.begin(),value.end());
+        sampleNum.erase(sampleNum.begin(),sampleNum.end());
+    }
+
+    ui->customPlot->graph(0)->rescaleValueAxis();
+    ui->customPlot->replot();
+
 }
 
+
+void MainWindow::on_StartButton_clicked()
+{
+    acciii.transmitData();
+}
+
+void MainWindow::on_StopButton_clicked()
+{
+    acciii.stopTransmission();
+    plotData(ui->customPlot);
+}
