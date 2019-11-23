@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>561</width>
-    <height>446</height>
+    <height>498</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,31 +24,101 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="StartButton">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
       <x>30</x>
       <y>340</y>
-      <width>113</width>
-      <height>32</height>
+      <width>501</width>
+      <height>71</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Start Sampling</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="StopButton">
-    <property name="geometry">
-     <rect>
-      <x>372</x>
-      <y>340</y>
-      <width>171</width>
-      <height>32</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Stop and Display</string>
-    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="StartButton">
+       <property name="text">
+        <string>Start Sampling</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout">
+       <item>
+        <widget class="QPlainTextEdit" name="plainTextEdit">
+         <property name="plainText">
+          <string>Type in Sampling TIme (seconds)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>28</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="sampleTime"/>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer_2">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>28</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="PlotButton">
+       <property name="text">
+        <string>Plot Data</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

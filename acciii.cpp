@@ -5,17 +5,22 @@ AccIII::AccIII(int argc, char** argv)
     dwSum = 0;
     fileBuffer = NULL;
     DataNum = 40000 * 24;
+    samp_time = 10;
 
     setupUSB(argc, argv);
 }
 
-AccIII::~AccIII(){}
+AccIII::~AccIII()
+{
+    free(fileBuffer); // Free buffer memory to avoid memory leak
+}
 
 void AccIII::setupUSB(int argc, char** argv){
     std::cout<<"setup USB"<<std::endl;
     if (argc == 2)
     {
-        float samp_time = std::atof(argv[1]);
+        //float samp_time = std::atof(argv[1]);
+
         printf("Sample time = %.4f secs\r\n", samp_time);
         DataNum = (int)(samp_time * ExpFs * AccBusNum * DataByteNum);
     }
@@ -153,11 +158,10 @@ void AccIII::transmitData(){
         FT_Close(ftHandle);
     }
 
-    free(fileBuffer); // Free buffer memory to avoid memory leak
 }
 
-void stopTransmission(){
-
+void AccIII::setSamplingTime(float time){
+    samp_time = time;
 }
 
 

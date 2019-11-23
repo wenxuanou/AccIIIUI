@@ -20,7 +20,8 @@ private slots:
 
     void on_StartButton_clicked();      // Start sampling button clicked
 
-    void on_StopButton_clicked();       // Stop sampling button clicked
+
+    void on_PlotButton_clicked();       // Plot button clicked
 
 private:
     Ui::MainWindow *ui;

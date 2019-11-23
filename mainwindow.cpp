@@ -5,7 +5,7 @@
 MainWindow::MainWindow(int argc, char** argv, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    acciii(argc,argv)
+    acciii(argc,argv)       // initiate USB transmission
 {
     ui->setupUi(this);
     setGeometry(400, 250, 542, 390);
@@ -107,13 +107,26 @@ void MainWindow::plotData(QCustomPlot *customPlot){
     int dataSetNum = acciii.printDataSetNum();
     QVector<double> value(dataSetNum), sampleNum(dataSetNum); // initialize vector for plotting
 
+    /*
     // Plot for each sensor(138 total), plot dataSetNum number of data
     for (int countSensor = 0; countSensor < 138; countSensor++){
         for(int countDataNum = 0; countDataNum < dataSetNum; countDataNum++){
             value.push_back(data_buffer[countDataNum][countSensor]);
             sampleNum.push_back(countDataNum);
         }
-        customPlot->graph(0)->addData(value, sampleNum);
+        customPlot->graph(0)->addData(sampleNum,value);
+        value.erase(value.begin(),value.end());
+        sampleNum.erase(sampleNum.begin(),sampleNum.end());
+    }
+    */
+
+    // Plot only first 30 sensors, plot dataSetNum number of data
+    for (int countSensor = 0; countSensor < 30; countSensor++){
+        for(int countDataNum = 0; countDataNum < dataSetNum; countDataNum++){
+            value.push_back(data_buffer[countDataNum][countSensor]);
+            sampleNum.push_back(countDataNum);
+        }
+        customPlot->graph(0)->addData(sampleNum,value);
         value.erase(value.begin(),value.end());
         sampleNum.erase(sampleNum.begin(),sampleNum.end());
     }
@@ -126,11 +139,16 @@ void MainWindow::plotData(QCustomPlot *customPlot){
 
 void MainWindow::on_StartButton_clicked()
 {
+    float input = ui->sampleTime->text().toFloat();
+
+    if(input > 0){
+        acciii.setSamplingTime(input);
+    }
+
     acciii.transmitData();
 }
 
-void MainWindow::on_StopButton_clicked()
+void MainWindow::on_PlotButton_clicked()
 {
-    acciii.stopTransmission();
     plotData(ui->customPlot);
 }
