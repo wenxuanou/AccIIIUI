@@ -140,6 +140,7 @@ void MainWindow::plotData(QCustomPlot *customPlot){
 void MainWindow::on_StartButton_clicked()
 {
     float input = ui->sampleTime->text().toFloat();
+	// To Check: Isn't the "samp_time" a variable of the "AccIII" class instead of the "MainWindow" class?
 
     if(input > 0){
         acciii.setSamplingTime(input);
