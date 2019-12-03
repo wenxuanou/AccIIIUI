@@ -117,37 +117,48 @@ void AccIII::transmitData(){
         printf("Sampling...\n");
 
 
+        std::cout<<"DataNum = "<< DataNum<<std::endl;
+
         // Extracting data in while loop
         while (dwSum < DataNum)
         {
-            usleep(500000);
+            //usleep(500000);
 
-            std::cout << "Thread using function"
+            //std::cout << "Thread using function"
                    " pointer as callable\n";
 
             // Read in data from RxButter
-           // ftStatus = FT_Read(ftHandle, RxBuffer, readBytesTest, &BytesReceivedTest);
+           ftStatus = FT_Read(ftHandle, RxBuffer, readBytesTest, &BytesReceivedTest);
+
+           std::cout << "Status = " << ftStatus <<std::endl;
 
             if ((ftStatus == FT_OK) && (RxBytes > 0))
             {
+                DWORD BytesReceived;
+                unsigned char RxBuffer[10000];
+
                 if (RxBytes < 10000)
                 {
-                    USBReadData(ftHandle, RxBytes, &dwSum, DataNum, fileBuffer);
+                    FT_STATUS ftStatus = FT_Read(ftHandle, RxBuffer, RxBytes, &BytesReceived);
+                    //USBReadData(ftHandle, RxBytes, &dwSum, DataNum, fileBuffer, ftStatus);
                 }
                 else
                 {
                     for (int i = 0; i <  RxBytes / 10000; i++)
                     {
-                        USBReadData(ftHandle, 10000, &dwSum, DataNum, fileBuffer);
+                       FT_SetTimeouts(ftHandle,1000,0);     // read with timeout 1 second
+                       ftStatus = FT_Read(ftHandle, RxBuffer, 10000, &BytesReceived);
+                       //USBReadData(ftHandle, 10000, &dwSum, DataNum, fileBuffer, ftStatus);
                     }
 
                     int iMod = RxBytes % 10000;
                     if (iMod > 0)
                     {
-                        USBReadData(ftHandle, iMod, &dwSum, DataNum, fileBuffer);
+                        //USBReadData(ftHandle, iMod, &dwSum, DataNum, fileBuffer);
                     }
                 }
             }
+            std::cout << "dwSum = " << dwSum << std::endl;
 
         }
 
@@ -158,14 +169,20 @@ void AccIII::transmitData(){
         FT_Close(ftHandle);
     }
 
+
+    std::cout<<"Sampling finished"<<std::endl;
 }
 
 void AccIII::setSamplingTime(float time){
 	//while(is_transmitting data); // To Do: implement a code checking the status of whether trasmitting the data or not. Wait until data transmission is completed before setting the sampling time and data number.
-	
-    samp_time = time;
-	
-	DataNum = (int)(samp_time * ExpFs * AccBusNum * DataByteNum);
+
+    if(time>0){
+        samp_time = time;
+        DataNum = (int)(samp_time * ExpFs * AccBusNum * DataByteNum);
+        //free(fileBuffer);
+        fileBuffer = new unsigned char[DataNum];
+    }
+
 }
 
 

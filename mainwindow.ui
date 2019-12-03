@@ -17,19 +17,19 @@
    <widget class="QCustomPlot" name="customPlot" native="true">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>10</y>
+      <x>21</x>
+      <y>11</y>
       <width>531</width>
-      <height>311</height>
+      <height>331</height>
      </rect>
     </property>
    </widget>
    <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>340</y>
-      <width>501</width>
+      <x>20</x>
+      <y>350</y>
+      <width>531</width>
       <height>71</height>
      </rect>
     </property>
@@ -48,8 +48,8 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>40</width>
-         <height>20</height>
+         <width>13</width>
+         <height>111</height>
         </size>
        </property>
       </spacer>
@@ -57,9 +57,9 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QPlainTextEdit" name="plainTextEdit">
-         <property name="plainText">
-          <string>Type in Sampling TIme (seconds)</string>
+        <widget class="QLabel" name="label">
+         <property name="text">
+          <string>Type in Samping Time (seconds)</string>
          </property>
         </widget>
        </item>
@@ -105,8 +105,8 @@
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>40</width>
-         <height>20</height>
+         <width>13</width>
+         <height>111</height>
         </size>
        </property>
       </spacer>
