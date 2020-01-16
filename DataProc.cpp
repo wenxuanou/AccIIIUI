@@ -11,7 +11,7 @@ unsigned char RxBuffer[10000];
 void USBReadData(FT_HANDLE ftHandle, DWORD readBytes, long* dwSum, int dataNum, unsigned char fileBuffer[], FT_STATUS ftStatus)
 {
     //FT_STATUS ftStatus;
-    //ftStatus = FT_Read(ftHandle, RxBuffer, readBytes, &BytesReceived);
+    ftStatus = FT_Read(ftHandle, RxBuffer, readBytes, &BytesReceived);
 	if (ftStatus == FT_OK)
 	{
 		long dwSum_org = *dwSum;

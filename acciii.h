@@ -32,7 +32,7 @@ private:
 	unsigned int READNUM = 46;
 	unsigned int HALFREAD = 23;
 	
-	std::vector<std::vector<float>> decoded_data;
+    std::vector<std::vector<float>> decoded_data;           // decoded_data is a vector of size dataSetNum * 138, 138 = 3 * 46
 
     //HANDLE ftHandle;
     FT_HANDLE ftHandle;
@@ -47,7 +47,6 @@ private:
     //Data transmission parameters
     LARGE_INTEGER lPreTime, lPostTime, lFrequency;
     DWORD BytesReceivedTest;
-    DWORD readBytesTest = 0;
     unsigned char RxBuffer[10000];
 
     //Number of data set acquired

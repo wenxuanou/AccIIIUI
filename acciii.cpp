@@ -50,6 +50,7 @@ void AccIII::setupUSB(int argc, char** argv){
     else
     {
         printf("FT_Open Succeeded!\r\n");
+        std::cout << "ftHandle: " << ftHandle << std::endl;
     }
 
     Mode = 0x00; //reset mode
@@ -111,13 +112,11 @@ void AccIII::transmitData(){
         }
 
         dwSum = 0;
-        readBytesTest = 0;
 
         std::cout<<"begin sampling"<<std::endl;
         printf("Sampling...\n");
-
-
         std::cout<<"DataNum = "<< DataNum<<std::endl;
+
 
         // Extracting data in while loop
         while (dwSum < DataNum)
@@ -127,12 +126,18 @@ void AccIII::transmitData(){
             //std::cout << "Thread using function"
                    " pointer as callable\n";
 
-            // Read in data from RxButter
-           ftStatus = FT_Read(ftHandle, RxBuffer, readBytesTest, &BytesReceivedTest);
+            ftStatus = FT_GetStatus(ftHandle, &RxBytes, &TxBytes, &EventDWord);
+            std::cout<<"ftSatus = "<< ftStatus << std::endl;
+            std::cout<<"FT_OK = "<< FT_OK << std::endl;
+            std::cout<<"RxBytes = " << RxBytes << std::endl;
 
-           std::cout << "Status = " << ftStatus <<std::endl;
+            if(ftStatus != FT_OK)
+            {
+                std::cout << "ftStatus not OK " << std::endl;
+                break;
+            }
 
-            if ((ftStatus == FT_OK) && (RxBytes > 0))
+            if ((RxBytes > 0))
             {
                 DWORD BytesReceived;
                 unsigned char RxBuffer[10000];
@@ -157,6 +162,10 @@ void AccIII::transmitData(){
                         //USBReadData(ftHandle, iMod, &dwSum, DataNum, fileBuffer);
                     }
                 }
+            }
+            else{
+                std::cout << "RxByte is 0" << std::endl;
+                break;
             }
             std::cout << "dwSum = " << dwSum << std::endl;
 

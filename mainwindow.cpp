@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "iostream"
+#include <iostream>
 
 MainWindow::MainWindow(int argc, char** argv, QWidget *parent) :
     QMainWindow(parent),
@@ -10,7 +10,7 @@ MainWindow::MainWindow(int argc, char** argv, QWidget *parent) :
     ui->setupUi(this);
     setGeometry(400, 250, 542, 390);
     setupPlot(ui->customPlot);
-    ui->customPlot->replot();
+    //ui->customPlot->replot();
 
 }
 
@@ -108,7 +108,7 @@ void MainWindow::plotData(QCustomPlot *customPlot){
     QVector<double> value(dataSetNum), sampleNum(dataSetNum); // initialize vector for plotting
 
     /*
-    // Plot for each sensor(138 total), plot dataSetNum number of data
+    // Plot for each channel(138 total, 138 = 3 * 46), plot dataSetNum number of data
     for (int countSensor = 0; countSensor < 138; countSensor++){
         for(int countDataNum = 0; countDataNum < dataSetNum; countDataNum++){
             value.push_back(data_buffer[countDataNum][countSensor]);
@@ -120,8 +120,8 @@ void MainWindow::plotData(QCustomPlot *customPlot){
     }
     */
 
-    // Plot only first 30 sensors, plot dataSetNum number of data
-    for (int countSensor = 0; countSensor < 30; countSensor++){
+    // Plot only first 3 channels, plot dataSetNum number of data
+    for (int countSensor = 0; countSensor < 3; countSensor++){
         for(int countDataNum = 0; countDataNum < dataSetNum; countDataNum++){
             value.push_back(data_buffer[countDataNum][countSensor]);
             sampleNum.push_back(countDataNum);
