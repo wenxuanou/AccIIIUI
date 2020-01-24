@@ -25,7 +25,7 @@ private:
     long dwSum;
     unsigned char* fileBuffer;  //data form FPGA stored in this buffer
     int DataNum;
-    float samp_time;  //sampling time in second, default is 10
+    float samp_time;  //sampling time in second, default is 10.0
 	
 	//Decoding configuration parameters and variables 
     const float GSCALE = 0.00073; // Unit coversion (0.73 mg/digit)

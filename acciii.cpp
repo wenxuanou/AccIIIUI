@@ -5,7 +5,7 @@ AccIII::AccIII(int argc, char** argv)
     dwSum = 0;
     fileBuffer = NULL;
     DataNum = 40000 * 24;
-    samp_time = 10;
+    samp_time = 10.0;
 
     setupUSB(argc, argv);
 }
@@ -183,12 +183,15 @@ void AccIII::transmitData(){
 }
 
 void AccIII::setSamplingTime(float time){
+	//while(is_transmitting data); // To Do: implement a code checking the status of whether trasmitting the data or not. Wait until data transmission is completed before setting the sampling time and data number.
+
     if(time>0){
         samp_time = time;
         DataNum = (int)(samp_time * ExpFs * AccBusNum * DataByteNum);
         //free(fileBuffer);
         fileBuffer = new unsigned char[DataNum];
     }
+
 }
 
 
