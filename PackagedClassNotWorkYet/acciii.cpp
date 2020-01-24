@@ -165,7 +165,7 @@ void AccIII::transmitData(){
             }
             else{
                 std::cout << "RxByte is 0" << std::endl;
-                break;
+                //break;
             }
             std::cout << "dwSum = " << dwSum << std::endl;
 
