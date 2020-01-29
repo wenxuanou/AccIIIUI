@@ -1,35 +1,23 @@
-#include <QMainWindow>
-#include <QTimer>
-#include "qcustomplot.h"
-#include "acciii.h"
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
-namespace Ui {
-class MainWindow;
-}
+#include <QMainWindow>
+#include "qcustomplot.h"
+
+QT_BEGIN_NAMESPACE
+namespace Ui { class MainWindow; }
+QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(int argc, char** argv, QWidget *parent = nullptr);
+    MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
-private slots:
-    //void realtimeDataSlot();    // slot to refresh plot
-
-    void on_StartButton_clicked();      // Start sampling button clicked
-
-
-    void on_PlotButton_clicked();       // Plot button clicked
+    void plotData(std::vector<std::vector<double>> data_buffer, int dataSetNum);
 
 private:
     Ui::MainWindow *ui;
-    AccIII acciii;     // USB transmission object
-
-    // Plotting functions
-    void setupPlot(QCustomPlot *customPlot);
-    void plotData(QCustomPlot *customPlot);
-
 };
-
+#endif // MAINWINDOW_H

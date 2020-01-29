@@ -10,11 +10,10 @@
 
 #include <stdint.h>
 
-/*
-//typedef uint8_t BYTE;
-//typedef uint32_t DWORD;
+typedef uint8_t BYTE;
+typedef uint32_t DWORD;
 //typedef int32_t LONG;
-//typedef int64_t LONGLONG;
+typedef int64_t LONGLONG;
 
 typedef union _LARGE_INTEGER {
   struct {
@@ -27,9 +26,9 @@ typedef union _LARGE_INTEGER {
   } u;
   LONGLONG QuadPart;
 } LARGE_INTEGER, *PLARGE_INTEGER;
-*/
 
-void USBReadData(FT_HANDLE ftHandle, DWORD readBytes, long* dwSum, int dataNum, unsigned char fileBuffer[], FT_STATUS ftStatus);
+
+void USBReadData(FT_HANDLE ftHandle, DWORD readBytes, long* dwSum, int dataNum, unsigned char fileBuffer[]);
 
 void SaveDataResult(long dwSum, unsigned char fileBuffer[]);
 
