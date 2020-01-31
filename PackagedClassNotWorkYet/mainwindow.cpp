@@ -17,20 +17,22 @@ void MainWindow::plotData(std::vector<std::vector<double>> data_buffer, int data
 
     QVector<double> value(dataSetNum), sampleNum(dataSetNum); // initialize vector for plotting
 
-    ui -> customPlot -> addGraph();
 
-    // Plot only first 3 channels, plot dataSetNum number of data
-    for (int countSensor = 0; countSensor < 3; countSensor++){
-        for(int countDataNum = 0; countDataNum < dataSetNum; countDataNum++){
-            value[countDataNum] = data_buffer[countDataNum][countSensor];
-            sampleNum[countDataNum] = (double)countDataNum/fs;
+    // For 10 sensors, 30 channels, plot dataSetNum number of data
+    for (int countSensor = 0; countSensor < 30; countSensor++){
+        // Plot only first 3 channels,
+            ui -> customPlot -> addGraph();
+            for(int countDataNum = 0; countDataNum < dataSetNum; countDataNum++){
+                value[countDataNum] = data_buffer[countDataNum][countSensor] + 16 * countSensor;
+
+                sampleNum[countDataNum] = (double)countDataNum/fs;
+            }
+
+            ui->customPlot->graph(countSensor)->addData(sampleNum,value);
         }
 
-        ui->customPlot->graph(0)->addData(sampleNum,value);
-    }
-
     ui->customPlot->xAxis->setRange(0,sampleNum[sampleNum.size()-1]); // Specify the time range
-    ui->customPlot->yAxis->setRange(-16,16); // Specify the measurement range +/- 16 g (gravity)
+    ui->customPlot->yAxis->setRange(-16, 500); // Specify the measurement range +/- 16 g (gravity)
 
     //ui->customPlot->graph(0)->rescaleValueAxis();
 

@@ -180,10 +180,10 @@ int main(int argc, char *argv[])
         FT_Close(ftHandle);
         printf("Begin to save data into file!\r\n");
 
-        SaveDataResult(dwSum, fileBuffer);
+        //SaveDataResult(dwSum, fileBuffer);
         printf("File Save Done!\r\n");
 
-        SaveNum(lPassTime, "sample_time.txt");
+        //SaveNum(lPassTime, "sample_time.txt");
 
         idDataRate = dwSum / (lPassTime * 6 * READNUM); // Count ID as data
         SaveNum(idDataRate, "data_rate.txt");
