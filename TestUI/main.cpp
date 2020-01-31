@@ -17,10 +17,11 @@ int dataSetNum;     // data buffer has size dataSetNum*138
 
 //Decoding configuration parameters and variables
 const double GSCALE = 0.00073; // Unit coversion (0.73 mg/digit)
-unsigned int READNUM = 46;
-//unsigned int READNUM = 10; // For a single branch
 
-unsigned int HALFREAD = 23;
+//unsigned int READNUM = 46;
+const unsigned int READNUM = 10; // For a single branch
+
+const unsigned int HALFREAD = (int)(READNUM * 0.5);
 
 std::vector<std::vector<double>> decodeData();
 
@@ -32,7 +33,7 @@ int main(int argc, char *argv[])
     MainWindow w;
 
     // ------------------------------------------------------
-    int DataNum = 40000 * 24; // Old version default: 1.159 secs
+    int DataNum = 40000 * (READNUM * 0.5 + 1); // Old version default: 1.159 secs
 
     if (argc == 2)
     {
@@ -77,6 +78,8 @@ int main(int argc, char *argv[])
 
     Mode = 0x00; //reset mode
     ftStatus = FT_SetBitMode(ftHandle, Mask, Mode);
+
+    float idDataRate = 0.0; // sampling rate;
 
     if (ftStatus == FT_OK)
         {
@@ -167,7 +170,7 @@ int main(int argc, char *argv[])
 
             SaveNum(lPassTime, "sample_time.txt");
 
-            float idDataRate = dwSum / (lPassTime * 6 * 46); // Count ID as data
+            idDataRate = dwSum / (lPassTime * 6 * READNUM); // Count ID as data
             SaveNum(idDataRate, "data_rate.txt");
         }
         else
@@ -184,7 +187,7 @@ int main(int argc, char *argv[])
 
     std::vector<std::vector<double>> decoded_data_buffer = decodeData();
 
-    w.plotData(decoded_data_buffer, dataSetNum);
+    w.plotData(decoded_data_buffer, dataSetNum, idDataRate);
 
     free(fileBuffer); // Free buffer memory to avoid memory leak
     return a.exec();
@@ -208,7 +211,6 @@ std::vector<std::vector<double>> decodeData(){
 
     long int hex_i = 0;
     for (int i = 0; i < samp_num; ++i) // One sample contains 46 sensor data
-    //for (int i = 0; i < 20; ++i) // One sample contains 46 sensor data
     {
         std::vector<double> a_sample(3*READNUM); // [Acc0_X,Acc0_Y,Acc0_Z,Acc1_X,...,Acc46_Z] 46*3 = 138
 
