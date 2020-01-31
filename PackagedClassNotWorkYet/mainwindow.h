@@ -15,7 +15,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void plotData(std::vector<std::vector<double>> data_buffer, int dataSetNum);
+    void plotData(std::vector<std::vector<double>> data_buffer, int dataSetNum, float fs);
 
 private:
     Ui::MainWindow *ui;

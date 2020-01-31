@@ -2,6 +2,12 @@
 #include "ftd2xx.h"
 #include "DataProc.h"
 
+#include <assert.h>
+#include <CoreServices/CoreServices.h>
+#include <mach/mach.h>
+#include <mach/mach_time.h>
+#include <unistd.h>
+
 #include <QApplication>
 #include <QLabel>
 
@@ -18,12 +24,11 @@ int dataSetNum;     // data buffer has size dataSetNum*138
 
 //Decoding configuration parameters and variables
 const double GSCALE = 0.00073; // Unit coversion (0.73 mg/digit)
-unsigned int READNUM = 46;
-//unsigned int READNUM = 10; // For a single branch
-
-unsigned int HALFREAD = 23;
+const unsigned int READNUM = 10; // For a single branch
+const unsigned int HALFREAD = (int)(READNUM * 0.5);
 
 std::vector<std::vector<double>> decodeData();
+uint64_t GetPIDTimeInNanoseconds();
 
 // ------------------------------------------------------------------------------
 
@@ -33,7 +38,8 @@ int main(int argc, char *argv[])
     MainWindow w;
 
     // ------------------------------------------------------
-    int DataNum = 40000 * 24; // Old version default: 1.159 secs
+    int DataNum = 40000 * (READNUM * 0.5 + 1); // Old version default: 1.159 secs
+
 
     if (argc == 2)
     {
@@ -67,6 +73,8 @@ int main(int argc, char *argv[])
     char TxBuffer[1] = { 0x55 };
 
     ftStatus = FT_Open(0, &ftHandle);
+    float idDataRate = 0.0; // sampling rate;
+
     if (ftStatus != FT_OK)
     {
         printf("FT_Open FAILED!\r\n");
@@ -121,9 +129,12 @@ int main(int argc, char *argv[])
             printf("FT_Write Failed\r\n");
         }
 
-        LARGE_INTEGER lPreTime, lPostTime, lFrequency;
-        QueryPerformanceFrequency(&lFrequency);
-        QueryPerformanceCounter(&lPreTime);
+        //LARGE_INTEGER lPreTime, lPostTime, lFrequency;
+        //QueryPerformanceFrequency(&lFrequency);
+        //QueryPerformanceCounter(&lPreTime);
+
+        uint64_t lPreTime, lPostTime;
+        lPreTime = GetPIDTimeInNanoseconds();
 
         dwSum = 0;
 
@@ -156,9 +167,15 @@ int main(int argc, char *argv[])
             }
         }
 
-        QueryPerformanceCounter(&lPostTime);
+        //QueryPerformanceCounter(&lPostTime);
+        lPostTime = GetPIDTimeInNanoseconds();
+        float lPassTime = (lPostTime - lPreTime) * 0.000000001;
+
+        /*
+        // calculating the actual sampling time period
         float lPassTick = lPostTime.QuadPart - lPreTime.QuadPart;
         float lPassTime = lPassTick / (float)lFrequency.QuadPart;
+        */
 
         FT_Close(ftHandle);
         printf("Begin to save data into file!\r\n");
@@ -168,7 +185,7 @@ int main(int argc, char *argv[])
 
         SaveNum(lPassTime, "sample_time.txt");
 
-        float idDataRate = dwSum / (lPassTime * 6 * 46); // Count ID as data
+        idDataRate = dwSum / (lPassTime * 6 * READNUM); // Count ID as data
         SaveNum(idDataRate, "data_rate.txt");
     }
     else
@@ -185,7 +202,7 @@ int main(int argc, char *argv[])
 
     std::vector<std::vector<double>> decoded_data_buffer = decodeData();
 
-    w.plotData(decoded_data_buffer, dataSetNum);
+    w.plotData(decoded_data_buffer, dataSetNum, idDataRate);
 
     free(fileBuffer); // Free buffer memory to avoid memory leak
     return a.exec();
@@ -209,7 +226,6 @@ std::vector<std::vector<double>> decodeData(){
 
     long int hex_i = 0;
     for (int i = 0; i < samp_num; ++i) // One sample contains 46 sensor data
-        //for (int i = 0; i < 20; ++i) // One sample contains 46 sensor data
     {
         std::vector<double> a_sample(3*READNUM); // [Acc0_X,Acc0_Y,Acc0_Z,Acc1_X,...,Acc46_Z] 46*3 = 138
 
@@ -250,3 +266,52 @@ std::vector<std::vector<double>> decodeData(){
     return decoded_data;
 }
 // Three axes: [X_L,X_H,Y_L,Y_H,Z_L,Z_H]
+
+
+//----------------------------------------------------------------------
+// Mac timing function, return nanosecond
+uint64_t GetPIDTimeInNanoseconds()
+{
+    uint64_t        start;
+    uint64_t        end;
+    uint64_t        elapsed;
+    uint64_t        elapsedNano;
+    static mach_timebase_info_data_t    sTimebaseInfo;
+
+    // Start the clock.
+
+    start = mach_absolute_time();
+
+    // Call getpid. This will produce inaccurate results because
+    // we're only making a single system call. For more accurate
+    // results you should call getpid multiple times and average
+    // the results.
+
+    (void) getpid();
+
+    // Stop the clock.
+
+    end = mach_absolute_time();
+
+    // Calculate the duration.
+
+    elapsed = end - start;
+
+    // Convert to nanoseconds.
+
+    // If this is the first time we've run, get the timebase.
+    // We can use denom == 0 to indicate that sTimebaseInfo is
+    // uninitialised because it makes no sense to have a zero
+    // denominator is a fraction.
+
+    if ( sTimebaseInfo.denom == 0 ) {
+        (void) mach_timebase_info(&sTimebaseInfo);
+    }
+
+    // Do the maths. We hope that the multiplication doesn't
+    // overflow; the price you pay for working in fixed point.
+
+    elapsedNano = elapsed * sTimebaseInfo.numer / sTimebaseInfo.denom;
+
+    return elapsedNano;
+}
