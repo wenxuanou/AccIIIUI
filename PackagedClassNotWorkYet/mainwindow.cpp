@@ -3,9 +3,11 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow), sampleTime(1.0)
 {
     ui->setupUi(this);
+    acciii = new Acciii();
+
 }
 
 MainWindow::~MainWindow()
@@ -43,5 +45,15 @@ void MainWindow::plotData(std::vector<std::vector<double>> data_buffer, int data
 
 void MainWindow::on_startButton_clicked()
 {
+    sampleTime = ui->sampleTime->text().toFloat();
+
+    acciii->setSampleTime(sampleTime);
+    acciii->sampleData();
+
+    plotData(acciii->decodeData(), acciii->returnDataSetNum(), acciii->returnIdDataRate());
 
 }
+
+//float MainWindow::returnSampleTime(){
+//    return sampleTime;
+//}
