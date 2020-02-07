@@ -40,3 +40,8 @@ void MainWindow::plotData(std::vector<std::vector<double>> data_buffer, int data
 
     return;
 }
+
+void MainWindow::on_startButton_clicked()
+{
+
+}

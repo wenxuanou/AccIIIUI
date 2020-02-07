@@ -194,6 +194,8 @@ int main(int argc, char *argv[])
         FT_Close(ftHandle);
     }
 
+
+
     // ------------------------------------------------------
     QLabel *label = new QLabel(&w);
     label->setText("\n      Program running...");

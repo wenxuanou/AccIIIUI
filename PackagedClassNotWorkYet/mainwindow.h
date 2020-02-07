@@ -17,6 +17,9 @@ public:
     ~MainWindow();
     void plotData(std::vector<std::vector<double>> data_buffer, int dataSetNum, float fs);
 
+private slots:
+    void on_startButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
