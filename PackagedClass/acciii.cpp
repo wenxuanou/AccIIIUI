@@ -131,15 +131,14 @@ void Acciii::sampleData(){
 
         idDataRate = dwSum / (lPassTime * 6 * READNUM); // Count ID as data
 
-        /*
+        
         //SaveDataResult(dwSum, fileBuffer);
         printf("File Save Done!\r\n");
 
         //SaveNum(lPassTime, "sample_time.txt");
 
         SaveNum(idDataRate, "data_rate.txt");
-        */
-
+      
     }
     else
     {
