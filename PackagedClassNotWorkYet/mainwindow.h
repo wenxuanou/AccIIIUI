@@ -14,9 +14,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget *parent = nullptr, Acciii *acciii_ = nullptr);
     ~MainWindow();
-    void plotData(std::vector<std::vector<double>> data_buffer, int dataSetNum, float fs);
+    void plotData();
     //float returnSampleTime();
 
 private slots:
@@ -27,5 +27,8 @@ private:
 
     Acciii* acciii;
     float sampleTime;
+    std::vector<std::vector<double>> data_buffer;
+    int dataSetNum;
+    float fs;
 };
 #endif // MAINWINDOW_H

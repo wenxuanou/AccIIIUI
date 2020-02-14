@@ -8,13 +8,15 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
+    Acciii* acciii = new Acciii();
+    MainWindow w(nullptr, acciii);
 
     // ------------------------------------------------------
     QLabel *label = new QLabel(&w);
     label->setText("\n      Program running...");
 
     w.show();
+
 
     return a.exec();
 }
