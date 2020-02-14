@@ -31,7 +31,7 @@ private:
     //Decoding configuration parameters and variables
     const double GSCALE; // Unit coversion (0.73 mg/digit)
     const unsigned int READNUM; // For a single branch
-    const unsigned int HALFREAD;
+    const unsigned int HALFREAD; // Half of readnum
     FT_HANDLE ftHandle;
     FT_STATUS ftStatus;
 
