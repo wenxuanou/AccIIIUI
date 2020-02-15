@@ -24,10 +24,12 @@ void USBReadData(FT_HANDLE ftHandle, DWORD readBytes, long* dwSum, int dataNum, 
 	}
 }
 
-void SaveDataResult(long dwSum, unsigned char fileBuffer[])
+void SaveDataResult(long dwSum, unsigned char fileBuffer[], std::string fileName)
 {
     FILE* fp;
-    errno_t err;
+    char theFileName[fileName.size()+1];
+    strcpy(theFileName, fileName.c_str());
+    fopen_s(&fp, theFileName, "wb");
     size_t write_size = fwrite(fileBuffer, sizeof(char), dwSum, fp);
     fclose(fp);
 }

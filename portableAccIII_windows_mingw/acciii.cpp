@@ -90,6 +90,7 @@ void Acciii::sampleData(){
         //lPreTime = GetPIDTimeInNanoseconds(); // For Mac OS
         LARGE_INTEGER lPreTime, lPostTime, lFrequency;
         QueryPerformanceCounter(&lPreTime);
+        QueryPerformanceFrequency(&lFrequency);
 
         dwSum = 0;
 
@@ -128,21 +129,23 @@ void Acciii::sampleData(){
         //lPostTime = GetPIDTimeInNanoseconds(); // For Mac OS
         //float lPassTime = (lPostTime - lPreTime) * 0.000000001; // For Mac OS
 
-
         FT_Close(ftHandle);
         printf("Begin to save data into file!\r\n");
 
-
         idDataRate = dwSum / (lPassTime * 6 * READNUM); // Count ID as data
 
-        
-        SaveDataResult(dwSum, fileBuffer);
-        printf("File Save Done!\r\n");
+        time_t theTime = time(NULL);
+        struct tm *currTime = localtime(&theTime);
+        char saveTime[12];
+        sprintf (saveTime, "%02d%02d_%02d%02d%02d_",currTime->tm_mon+1, currTime->tm_mday, currTime->tm_hour, currTime->tm_min, currTime->tm_sec);
 
-        //SaveNum(lPassTime, "sample_time.txt");
+        SaveDataResult(dwSum, fileBuffer, std::string(saveTime)+"data.bin");
 
-        SaveNum(idDataRate, "data_rate.txt");
+        //SaveNum(lPassTime, std::string(saveTime)+"sample_time.txt");
+
+        SaveNum(idDataRate, std::string(saveTime)+"data_rate.txt");
       
+        printf("File Save Done!\r\n");
     }
     else
     {

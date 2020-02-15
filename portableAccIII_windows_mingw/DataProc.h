@@ -1,6 +1,8 @@
 #pragma once
 //------------------------------------------------------------------------------
 #include<string>
+#include <fstream>
+#include <iostream>
 #include"ftd2xx.h"
 #define ExpFs 1310 // Expected sampling frequency
 #define AccBusNum 10 // Totally 23 buses each connecting two accelerometers
@@ -12,6 +14,6 @@
 
 void USBReadData(FT_HANDLE ftHandle, DWORD readBytes, long* dwSum, int dataNum, unsigned char fileBuffer[]);
 
-void SaveDataResult(long dwSum, unsigned char fileBuffer[]);
+void SaveDataResult(long dwSum, unsigned char fileBuffer[], std::string fileName);
 
 void SaveNum(float inputValue, std::string fileName);
