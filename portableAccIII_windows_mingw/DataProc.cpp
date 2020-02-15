@@ -26,14 +26,9 @@ void USBReadData(FT_HANDLE ftHandle, DWORD readBytes, long* dwSum, int dataNum, 
 
 void SaveDataResult(long dwSum, unsigned char fileBuffer[])
 {
-	FILE* fp;
-	errno_t err;
-    err = fopen_s(&fp, "data.bin", "wb");
-
-    if (err == 0)
-    {
-        size_t write_size = fwrite(fileBuffer, sizeof(byte), dwSum, fp);
-    }
+    FILE* fp;
+    errno_t err;
+    size_t write_size = fwrite(fileBuffer, sizeof(char), dwSum, fp);
     fclose(fp);
 }
 
