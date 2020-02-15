@@ -5,12 +5,11 @@
 #include "DataProc.h"
 
 #include <assert.h>
-#include <CoreServices/CoreServices.h>
-#include <mach/mach.h>
-#include <mach/mach_time.h>
 #include <unistd.h>
 
 #include <vector>
+
+#include <time.h>
 
 class Acciii
 {
@@ -31,11 +30,11 @@ private:
     //Decoding configuration parameters and variables
     const double GSCALE; // Unit coversion (0.73 mg/digit)
     const unsigned int READNUM; // For a single branch
-    const unsigned int HALFREAD;
+    const unsigned int HALFREAD; // Half of readnum
     FT_HANDLE ftHandle;
     FT_STATUS ftStatus;
 
-    uint64_t GetPIDTimeInNanoseconds();
+    //uint64_t GetPIDTimeInNanoseconds();
 
 
 public:
