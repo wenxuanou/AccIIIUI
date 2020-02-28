@@ -1,6 +1,6 @@
 #include "acciii.h"
 
-Acciii::Acciii() : GSCALE(0.00073), READNUM(10), HALFREAD((int)(READNUM * 0.5)), sampleTime(1.0)
+Acciii::Acciii() : GSCALE(0.00073), READNUM(46), HALFREAD((int)(READNUM * 0.5)), sampleTime(1.0)
 {
     dwSum = 0;
     fileBuffer = nullptr;
@@ -132,18 +132,24 @@ void Acciii::sampleData(){
         FT_Close(ftHandle);
         printf("Begin to save data into file!\r\n");
 
-        idDataRate = dwSum / (lPassTime * 6 * READNUM); // Count ID as data
+        idDataRate = dwSum / (lPassTime * 6 * READNUM); //
 
         time_t theTime = time(NULL);
         struct tm *currTime = localtime(&theTime);
         char saveTime[12];
         sprintf (saveTime, "%02d%02d_%02d%02d%02d_",currTime->tm_mon+1, currTime->tm_mday, currTime->tm_hour, currTime->tm_min, currTime->tm_sec);
 
-        SaveDataResult(dwSum, fileBuffer, std::string(saveTime)+"data.bin");
+        std::string dataPathName = "C:/AccData/" + std::string(saveTime);
+        dataPathName.append("data.bin");
 
-        //SaveNum(lPassTime, std::string(saveTime)+"sample_time.txt");
+        std::string dataRateName = "C:/AccData/" + std::string(saveTime);
+        dataRateName.append("sample_time.txt");
 
-        SaveNum(idDataRate, std::string(saveTime)+"data_rate.txt");
+        SaveDataResult(dwSum, fileBuffer, dataPathName);
+
+        //SaveNum(lPassTime, );
+
+        SaveNum(idDataRate, dataRateName);
       
         printf("File Save Done!\r\n");
     }

@@ -9,6 +9,7 @@ MainWindow::MainWindow(QWidget *parent, Acciii *acciii_)
     //acciii = new Acciii;
     acciii = acciii_;
 
+    dispSensorInd = {2, 32, 63, 92, 134};
 }
 
 MainWindow::~MainWindow()
@@ -21,12 +22,12 @@ void MainWindow::plotData(){
 
     QVector<double> value(dataSetNum), sampleNum(dataSetNum); // initialize vector for plotting
 
-    // For 10 sensors, 30 channels, plot dataSetNum number of data
-    for (int countSensor = 0; countSensor < 30; countSensor++){
+    // For x sensors, 3x channels, plot dataSetNum number of data
+    for (int countSensor = 0; countSensor < dispSensorInd.size(); countSensor++){
         // Plot only first 3 channels,
             ui -> customPlot -> addGraph();
             for(int countDataNum = 0; countDataNum < dataSetNum; countDataNum++){
-                value[countDataNum] = data_buffer[countDataNum][countSensor] + 16 * countSensor;
+                value[countDataNum] = data_buffer[countDataNum][dispSensorInd[countSensor]] + 16 * countSensor;
 
                 sampleNum[countDataNum] = (double)countDataNum/fs;
             }
@@ -35,7 +36,7 @@ void MainWindow::plotData(){
         }
 
     ui->customPlot->xAxis->setRange(0,sampleNum[sampleNum.size()-1]); // Specify the time range
-    ui->customPlot->yAxis->setRange(-16, 500); // Specify the measurement range +/- 16 g (gravity)
+    ui->customPlot->yAxis->setRange(-16, 16*dispSensorInd.size()); // Specify the measurement range +/- 16 g (gravity)
 
     ui->customPlot->replot();
 
