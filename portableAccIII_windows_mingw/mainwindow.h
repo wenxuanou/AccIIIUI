@@ -30,5 +30,7 @@ private:
     std::vector<std::vector<double>> data_buffer;
     int dataSetNum;
     float fs;
+
+    std::vector<unsigned int> dispSensorInd; // Select sensor to be displayed
 };
 #endif // MAINWINDOW_H
