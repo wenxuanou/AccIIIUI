@@ -36,8 +36,8 @@ void SaveDataResult(long dwSum, unsigned char fileBuffer[], std::string fileName
 
 void SaveNum(float inputValue, std::string fileName)
 {
-	std::ofstream ofs;
+    std::ofstream ofs;
 	ofs.open(fileName);
-	ofs << inputValue << std::endl;
-	ofs.close();
+    ofs << inputValue << std::endl;
+    ofs.close();
 }
