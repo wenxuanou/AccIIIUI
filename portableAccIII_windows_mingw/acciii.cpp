@@ -139,17 +139,13 @@ void Acciii::sampleData(){
         char saveTime[12];
         sprintf (saveTime, "%02d%02d_%02d%02d%02d_",currTime->tm_mon+1, currTime->tm_mday, currTime->tm_hour, currTime->tm_min, currTime->tm_sec);
 
-        std::string dataPathName = "C:/AccData/" + std::string(saveTime);
-        dataPathName.append("data.bin");
+        std::string savePath = "C:/AccData/" + std::string(saveTime);
 
-        std::string dataRateName = "C:/AccData/" + std::string(saveTime);
-        dataRateName.append("sample_time.txt");
+        SaveDataResult(dwSum, fileBuffer, savePath + "data.bin");
 
-        SaveDataResult(dwSum, fileBuffer, dataPathName);
+        //SaveNum(lPassTime, std::string(saveTime)+"sample_time.txt");
 
-        //SaveNum(lPassTime, );
-
-        SaveNum(idDataRate, dataRateName);
+        SaveNum(idDataRate, savePath + "data_rate.txt");
       
         printf("File Save Done!\r\n");
     }
